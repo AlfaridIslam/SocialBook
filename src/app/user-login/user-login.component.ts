@@ -1,4 +1,5 @@
 import { Component,OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-login',
@@ -18,7 +19,7 @@ export class UserLoginComponent implements OnInit{
     password:''
   }
 
-  constructor() { }
+  constructor(private router: Router) {}
 
   ngOnInit(): void {
     const localData = localStorage.getItem('signupUsers');
@@ -38,12 +39,30 @@ export class UserLoginComponent implements OnInit{
   }
 
   onLogin() {
-    const isUserExist = this.signupUsers.find(m => m.userName == this.loginObj.userName && m.password == this.loginObj.password)
-    if(isUserExist != undefined) {
-      alert('User login Succesfully');
-    }else {
+    const isUserExist = this.checkAuthentication();
+    if (isUserExist) {
+      this.router.navigate(['/header']);
+    } else {
       alert('Wrong credentials');
     }
   }
+  
+  // Implement your authentication logic here
+  checkAuthentication(): boolean {
+    // Assuming signupUsers is an array of objects with properties userName, email, and password
+    // Assuming loginObj has properties userName, email, and password
+    const isUserExist = this.signupUsers.find(
+      (user) => user.email === this.loginObj.email && user.password === this.loginObj.password
+    );
+  
+    return !!isUserExist;
+  }
+  
+  
+  
+  
+  
+  
+  
 
 }
